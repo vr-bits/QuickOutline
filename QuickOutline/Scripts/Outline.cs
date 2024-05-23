@@ -210,8 +210,8 @@ public class Outline : MonoBehaviour {
         continue;
       }
 
-      // Clear UV3
-      skinnedMeshRenderer.sharedMesh.uv4 = new Vector2[skinnedMeshRenderer.sharedMesh.vertexCount];
+      var smoothNormals = SmoothNormals(skinnedMeshRenderer.sharedMesh);
+      skinnedMeshRenderer.sharedMesh.SetUVs(3, smoothNormals);
 
       // Combine submeshes
       CombineSubmeshes(skinnedMeshRenderer.sharedMesh, skinnedMeshRenderer.sharedMaterials);
