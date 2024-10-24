@@ -18,5 +18,12 @@
   "author": {
     "name": "Chris Nolet",
     "url": "https://github.com/chrisnolet"
+  },
+  "samples": [
+  {
+	"displayName": "Quickoutline Example",
+    "description": "Sample for Outline Usage",
+    "path": "Samples~/OutlineSample"
   }
+  ]
 }
