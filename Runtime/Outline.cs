@@ -48,6 +48,14 @@ public class Outline : MonoBehaviour {
     }
   }
 
+  public int QueueOffset {
+    get { return queueOffset; }
+    set {
+      queueOffset = value;
+      needsUpdate = true;
+    }
+  }
+  
   [Serializable]
   private class ListVector3 {
     public List<Vector3> data;
@@ -61,6 +69,10 @@ public class Outline : MonoBehaviour {
 
   [SerializeField, Range(0f, 10f)]
   private float outlineWidth = 2f;
+  
+  [SerializeField]
+  [Range(-10, 10)]
+  private int queueOffset = 0;
 
   [Header("Optional")]
 
@@ -82,7 +94,7 @@ public class Outline : MonoBehaviour {
   private Material outlineFillMaterial;
 
   private bool needsUpdate;
-
+  private int fillQueue, maskQueue;
   void Awake() {
 
     // Cache renderers
@@ -107,7 +119,9 @@ public class Outline : MonoBehaviour {
 
     outlineMaskMaterial.name = "OutlineMask (Instance)";
     outlineFillMaterial.name = "OutlineFill (Instance)";
-
+    
+    fillQueue = outlineFillMaterial.renderQueue;
+    maskQueue = outlineMaskMaterial.renderQueue;
     // Retrieve or generate smooth normals
     LoadSmoothNormals();
 
@@ -316,7 +330,8 @@ public class Outline : MonoBehaviour {
 
     // Apply properties according to mode
     outlineFillMaterial.SetColor("_OutlineColor", outlineColor);
-
+    outlineFillMaterial.renderQueue = fillQueue - queueOffset * 100;
+    outlineMaskMaterial.renderQueue = maskQueue - queueOffset * 100;
     switch (outlineMode) {
       case Mode.OutlineAll:
         outlineMaskMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
